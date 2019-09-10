@@ -314,27 +314,6 @@ public:
         //}
 
     }
-    void doingLandmark_112(cv::Mat &face,std::vector<cv::Point> &pts,int zeroadd_x ,int zeroadd_y,int stable_state =0 ) {
-        //ncnn::Mat in = ncnn::Mat::from_pixels_resize(face.data, ncnn::Mat::PIXEL_BGR, face.cols, face.rows, 80, 80);
-        ncnn::Mat in = ncnn::Mat::from_pixels_resize(face.data, ncnn::Mat::PIXEL_BGR, face.cols, face.rows, 112, 112);
-        const float mean_vals[3] = {127.5f, 127.5f, 127.5f};
-        const float norm_vals[3] = {1.0 / 127.5, 1.0 / 127.5, 1.0 / 127.5};
-        in.substract_mean_normalize(mean_vals, norm_vals);
-        ncnn::Extractor frNet = net_landmark_.create_extractor();
-        frNet.set_num_threads(2);
-        // frNet.set_light_mode(true);
-        frNet.input("data", in);
-        ncnn::Mat out;
-        frNet.extract("prelu1", out);
-        __android_log_print(ANDROID_LOG_ERROR,"ncnn","h:%d w:%d c:%d",out.h,out.w,out.c);
-        for (int j = 0; j < 106; j++) {
-            int x = static_cast<int>(out[j * 2 + 0] * face.cols)+zeroadd_x;
-            int y = static_cast<int>(out[j * 2 + 1] * face.rows)+zeroadd_y;
-            cv::Point p(x, y);
-            pts[j] = p;
-        }
-
-    }
 
     void tracking_corrfilter(const cv::Mat &frame, const cv::Mat &model, cv::Rect &trackBox,float scale )
     {
